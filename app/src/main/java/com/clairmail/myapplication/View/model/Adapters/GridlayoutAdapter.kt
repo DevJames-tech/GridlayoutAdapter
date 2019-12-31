@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.clairmail.myapplication.View.model.dataclass.Photo
 import com.squareup.picasso.Picasso
 import android.util.Log
+import android.widget.Toast
 import com.clairmail.myapplication.R
 import com.clairmail.myapplication.View.View.MainActivity
 import com.clairmail.myapplication.View.model.OnItemClickListener
@@ -72,9 +73,13 @@ class GridlayoutAdapter() :
         }
 
         override fun onClick(v: View?) {
+            //NEW TEXT HERE@!!
+
 
             itemClickListener.onClick(adapterPosition)
+
             val item = itemList[layoutPosition] //contains int postion of clicked Item
+
             Log.d("james", itemList[layoutPosition].toString())
 
             val main = MainActivity()
