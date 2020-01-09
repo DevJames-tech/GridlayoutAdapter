@@ -2,8 +2,5 @@ package com.clairmail.myapplication.View.model
 
 interface OnItemClickListener {
 
-    fun onClick(position: Int){
-
-
-    }
+    fun onItemClick(position: Int)
 }

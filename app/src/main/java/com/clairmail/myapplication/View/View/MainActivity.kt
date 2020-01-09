@@ -3,9 +3,11 @@ package com.clairmail.myapplication.View.View
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Contacts
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.clairmail.myapplication.R
 import com.clairmail.myapplication.View.ViewModel.MainActivityViewModel
 import com.clairmail.myapplication.View.model.Adapters.GridlayoutAdapter
@@ -16,10 +18,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnItemClickListener {
 
-    private val gridLayoutAdapter = GridlayoutAdapter();
+    private lateinit var  gridLayoutAdapter: GridlayoutAdapter
 
     private lateinit var viewModel: MainActivityViewModel
     private val flickerApiResponse = FlickerApiResponse()
+    private var holdsPhotoList = ArrayList<Photo>() // to hold the list of photo from the api response
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,54 +31,51 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
 
-
+        gridLayoutAdapter = GridlayoutAdapter(this) // sets the adapter using the activity which implements a listener
 
         setGridManager()
         watchData() //setting observer
+
         flickerApiResponse.setFlickerResponseData(this)//making api call
 
     }
 
     private fun setGridManager(){
 
-
-
        recyclerView.adapter = gridLayoutAdapter
 
         recyclerView.adapter = gridLayoutAdapter
-        recyclerView.layoutManager =  GridLayoutManager(
-            this, 3)
+        recyclerView.layoutManager = GridLayoutManager(
+            this, 2)
         //spanCount is number of rows or columns depending on the direction of the layout
 
 
 
     }
 
-    fun watchData(){
+    private fun watchData(){
         //Live data here helps makes an async call
         flickerApiResponse.getApirResponse()?.observe(this,
-            Observer { Photos ->  // Arguments lambda
-                gridLayoutAdapter.setListOfPhotos(Photos) //statements for lambda
+            Observer { photos ->  holdsPhotoList.addAll(photos) // Arguments lambda
+                gridLayoutAdapter.setListOfPhotos(photos) //statements for lambda
         })
     }
 
-    fun initActivity(){
+    private fun initActivity(position: Int){
 
         val photo = Photo()
         val photoBundle = Bundle()
         val intent = Intent(this, DetailActivity::class.java)
 
 
-        intent.putExtras(photoBundle)
+        intent.putExtra(Photo.BUNDLE_TAG, holdsPhotoList[position])
         photoBundle.putParcelable(Photo.BUNDLE_TAG, photo)
-
         this.startActivity(intent)
     }
 
-    override fun onClick(position: Int) {
-        super.onClick(position)
+    override fun onItemClick(position: Int) {
 
-        initActivity()
+        initActivity(position)
     }
 
 ////

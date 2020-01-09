@@ -1,9 +1,5 @@
 package com.clairmail.myapplication.View.View
 
-import android.content.Intent
-import android.content.Intent.getIntent
-import android.content.Intent.parseUri
-import android.media.Image
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -13,27 +9,27 @@ import com.squareup.picasso.Picasso
 
 class DetailActivity: AppCompatActivity() {
 
-    private lateinit var listOPhotos: ArrayList<Photo>
     private var bundle = Bundle()
-    private val imageHolder: ImageView? = null
+    private var imageHolder: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.details_activity)
 
         getFullSizedImage()
 
     }
 
+    private fun getFullSizedImage(){
 
-        fun getFullSizedImage(){
-
+        if (imageHolder == null){ imageHolder = findViewById(R.id.image2) }
 
         if(intent.extras != null){ bundle = intent.extras!! }
 
-            val  photo = bundle.getParcelable<Photo>(Photo.BUNDLE_TAG)
+        val  photo = bundle.getParcelable<Photo>(Photo.BUNDLE_TAG)
 
-        Picasso.get().load(photo?.downloadUrl).into(imageHolder)
+        Picasso.get().load(photo?.downloadUrl).centerInside().resize(3840, 2160).into(imageHolder)
     }
 
 }
